@@ -1,0 +1,110 @@
+:root {
+  color-scheme: dark;
+  --ink: #15120f;
+  --ink-2: #1c1814;
+  --ink-3: #262019;
+  --paper: #f1e4cb;
+  --paper-dim: #cfc1a8;
+  --paper-faint: #9b8e79;
+  --amber: #d9a441;
+  --amber-soft: #e6be77;
+  --brick: #a85a44;
+  --moss: #7c8b67;
+  --sky: #7f98a8;
+  --line: rgba(241, 228, 203, 0.14);
+  --line-strong: rgba(241, 228, 203, 0.26);
+  --glass: rgba(23, 19, 15, 0.78);
+  --glass-strong: rgba(18, 15, 12, 0.93);
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  --serif: "Cormorant Garamond", "Times New Roman", serif;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --radius: 16px;
+  --tape: rgba(217, 164, 65, 0.22);
+  font-family: var(--sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+  overscroll-behavior: none;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: rgba(217, 164, 65, 0.3);
+}
+
+.serif {
+  font-family: var(--serif);
+}
+.mono-caps {
+  font: 500 10px / 1.2 var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.muted {
+  color: var(--paper-dim);
+}
+.faint {
+  color: var(--paper-faint);
+}
+.hidden {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.001ms;
+  }
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.001ms;
+  transition-duration: 0.001ms;
+}

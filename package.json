@@ -1,0 +1,42 @@
+{
+  "name": "mir",
+  "private": true,
+  "version": "0.1.0",
+  "description": "MIR — Мир без перевода. An immersive Russian-learning life sim.",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c magenta,cyan \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "tsx watch apps/server/src/index.ts",
+    "dev:client": "vite --config apps/client/vite.config.ts",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build --config apps/client/vite.config.ts",
+    "build:server": "tsup",
+    "start": "node dist/server/index.js",
+    "preview": "vite preview --config apps/client/vite.config.ts --host 0.0.0.0",
+    "typecheck": "tsc -p packages/shared/tsconfig.json --noEmit && tsc -p apps/server/tsconfig.json --noEmit && tsc -p apps/client/tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "icons": "node scripts/generate-icons.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^22.15.0",
+    "concurrently": "^9.2.0",
+    "happy-dom": "^21.0.3",
+    "tsup": "^8.5.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

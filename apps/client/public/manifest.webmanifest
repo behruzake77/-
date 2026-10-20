@@ -1,0 +1,24 @@
+{
+  "name": "MIR — Мир без перевода",
+  "short_name": "MIR",
+  "description": "Учи русский, живя в северном дворе: разговоры, дела, память слов.",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#15120f",
+  "theme_color": "#15120f",
+  "categories": ["education", "games"],
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    {
+      "src": "./icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@mir/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.10",
+    "@fastify/static": "^8.2.0",
+    "@mir/shared": "*",
+    "drizzle-orm": "^0.45.4",
+    "fastify": "^5.4.0",
+    "pg": "^8.16.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.0"
+  }
+}

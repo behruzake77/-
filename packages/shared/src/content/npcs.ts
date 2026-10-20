@@ -1,0 +1,303 @@
+import type { NpcDefinition, NpcDialogueRule, NpcId } from "../types.js";
+
+export const NPCS: NpcDefinition[] = [
+  {
+    id: "anna",
+    nameRu: "Анна Соколова",
+    nameEn: "Anna Sokolova",
+    shortNameRu: "Анна",
+    roleRu: "художница, твоя знакомая",
+    roleEn: "illustrator, your acquaintance",
+    personality:
+      "Warm, quick and a little chaotic. She worries about you but hides it with jokes. Speaks clearly and slows down when you struggle, never condescending.",
+    look: {
+      skin: "#e8b995",
+      hair: "#8a4a2f",
+      hairStyle: "bob",
+      coat: "#46604f",
+      coatAlt: "#2f4438",
+      accessory: "scarf",
+      accent: "#c98a4b",
+    },
+    portrait: "anna",
+    voice: { rate: 0.92, pitch: 1.06 },
+    homeZone: "cafe",
+    defaultDialogue: "anna_cafe",
+    defaultAnimation: "idle",
+    kindnessStart: 28,
+  },
+  {
+    id: "lidia",
+    nameRu: "Лидия Петровна",
+    nameEn: "Lidia Petrovna",
+    shortNameRu: "Лидия Петровна",
+    roleRu: "соседка, бывший библиотекарь",
+    roleEn: "neighbour, retired librarian",
+    personality:
+      "Dry, precise, quietly generous. A retired librarian who has seen everything in this courtyard. Speaks in short complete sentences and loves small, exact words.",
+    look: {
+      skin: "#e3bc9e",
+      hair: "#cfc7bf",
+      hairStyle: "bun",
+      coat: "#7b6a86",
+      coatAlt: "#574b63",
+      accessory: "glasses",
+      accent: "#b088a4",
+    },
+    portrait: "lidia",
+    voice: { rate: 0.78, pitch: 1.0 },
+    homeZone: "courtyard",
+    defaultDialogue: "lidia_phone",
+    defaultAnimation: "tidy",
+  },
+  {
+    id: "sasha",
+    nameRu: "Саша",
+    nameEn: "Sasha",
+    shortNameRu: "Саша",
+    roleRu: "мальчик из второго подъезда",
+    roleEn: "a boy from entrance two",
+    personality:
+      "Nine years old, fast, loud and endlessly curious. Treats you like a co-conspirator. Simple grammar, present tense, lots of “смотри!”.",
+    look: {
+      skin: "#efc4a2",
+      hair: "#5b3a26",
+      hairStyle: "beanie",
+      coat: "#b4473a",
+      coatAlt: "#84322a",
+      accessory: "none",
+      accent: "#e0b13d",
+    },
+    portrait: "sasha",
+    voice: { rate: 1.0, pitch: 1.35 },
+    homeZone: "courtyard",
+    defaultDialogue: "sasha_meet",
+    defaultAnimation: "bounce",
+    kindnessStart: 10,
+  },
+  {
+    id: "artyom",
+    nameRu: "Артём",
+    nameEn: "Artyom",
+    shortNameRu: "Артём",
+    roleRu: "курьер",
+    roleEn: "courier",
+    personality:
+      "Twenty-four, always late, always carrying three things at once. Kind under the hurry. Uses modern casual Russian but slows for you. Secretly knows every shortcut in the district.",
+    look: {
+      skin: "#d9a987",
+      hair: "#2c241f",
+      hairStyle: "cap",
+      coat: "#2b3038",
+      coatAlt: "#1c2026",
+      accessory: "earbuds",
+      accent: "#e2b23c",
+    },
+    portrait: "artyom",
+    voice: { rate: 1.04, pitch: 0.96 },
+    homeZone: "courtyard",
+    defaultDialogue: "artyom_meet",
+    defaultAnimation: "fidget",
+    kindnessStart: 5,
+  },
+  {
+    id: "nina",
+    nameRu: "Нина Аркадьевна",
+    nameEn: "Nina Arkadyevna",
+    shortNameRu: "Нина",
+    roleRu: "продавщица",
+    roleEn: "shop assistant",
+    personality:
+      "Fifty-two, deadpan, efficient. Runs “У дома” like a small kingdom. Warms up if you try to speak and are polite. Speaks in formulaic shop Russian — perfect to learn.",
+    look: {
+      skin: "#e6b790",
+      hair: "#6b4a34",
+      hairStyle: "bun",
+      coat: "#3d6d8f",
+      coatAlt: "#2b516c",
+      accessory: "apron",
+      accent: "#dfe6e8",
+    },
+    portrait: "nina",
+    voice: { rate: 0.9, pitch: 1.02 },
+    homeZone: "shop",
+    defaultDialogue: "nina_meet",
+    defaultAnimation: "scan",
+  },
+  {
+    id: "andrey",
+    nameRu: "Андрей Викторович",
+    nameEn: "Andrey Viktorovich",
+    shortNameRu: "Андрей",
+    roleRu: "работник метро",
+    roleEn: "metro worker",
+    personality:
+      "Forty-six, a mechanic on his break. Formal but fatherly. Loves explaining how things work and testing if you actually listened. Answers a question with a question, then gives a perfect answer.",
+    look: {
+      skin: "#ddb092",
+      hair: "#4a3a2d",
+      hairStyle: "cap",
+      coat: "#32456b",
+      coatAlt: "#222f4c",
+      accessory: "uniform",
+      accent: "#cf3a32",
+    },
+    portrait: "andrey",
+    voice: { rate: 0.84, pitch: 0.9 },
+    homeZone: "metro",
+    defaultDialogue: "andrey_meet",
+    defaultAnimation: "idle",
+  },
+  {
+    id: "kostya",
+    nameRu: "Костя",
+    nameEn: "Kostya",
+    shortNameRu: "Костя",
+    roleRu: "бариста и хозяин кафе",
+    roleEn: "barista and café owner",
+    personality:
+      "Thirty-one, dry humour, tattoos, excellent taste. Speaks in short ironic lines. Sincerely believes that coffee and language are both about paying attention.",
+    look: {
+      skin: "#d9ab8b",
+      hair: "#2b211c",
+      hairStyle: "short",
+      coat: "#39403a",
+      coatAlt: "#252a26",
+      accessory: "apron",
+      accent: "#a8553c",
+    },
+    portrait: "kostya",
+    voice: { rate: 0.94, pitch: 0.94 },
+    homeZone: "cafe",
+    defaultDialogue: "kostya_meet",
+    defaultAnimation: "idle",
+    kindnessStart: 8,
+  },
+  {
+    id: "valentina",
+    nameRu: "Валентина Ильинична",
+    nameEn: "Valentina Ilyinichna",
+    shortNameRu: "Валентина",
+    roleRu: "приёмщица в доме быта",
+    roleEn: "receptionist at the service house",
+    personality:
+      "Fifty-eight, orange vest, knows every notice, every key and every person. Practical and direct, with sudden bursts of warmth. The person to ask about work.",
+    look: {
+      skin: "#e4b897",
+      hair: "#9b5b3c",
+      hairStyle: "curly",
+      coat: "#cf7a3c",
+      coatAlt: "#a85c2b",
+      accessory: "vest",
+      accent: "#f2e4c8",
+    },
+    portrait: "valentina",
+    voice: { rate: 0.92, pitch: 1.08 },
+    homeZone: "dombyta",
+    defaultDialogue: "valentina_meet",
+    defaultAnimation: "tidy",
+    kindnessStart: 6,
+  },
+  {
+    id: "musya",
+    nameRu: "Муся",
+    nameEn: "Musya",
+    shortNameRu: "Муся",
+    roleRu: "кошка Лидии Петровны",
+    roleEn: "Lidia Petrovna’s cat",
+    personality: "A grey courtyard cat with strong opinions and no interest in your schedule.",
+    look: {
+      skin: "#8d8a84",
+      hair: "#63605b",
+      hairStyle: "short",
+      coat: "#8d8a84",
+      coatAlt: "#6f6c66",
+      accessory: "none",
+      accent: "#cbbfae",
+      height: 0.55,
+    },
+    portrait: "musya",
+    homeZone: "courtyard",
+    defaultDialogue: "musya_meet",
+    defaultAnimation: "cat",
+    kindnessStart: 0,
+  },
+];
+
+export const NPC_BY_ID: Record<string, NpcDefinition> = Object.fromEntries(
+  NPCS.map((npc) => [npc.id, npc]),
+);
+
+/**
+ * Authored branching rules — evaluated top to bottom.
+ * The first matching rule picks the conversation. AI never decides this.
+ */
+export const NPC_DIALOGUE_RULES: Record<string, NpcDialogueRule[]> = {
+  anna: [
+    { when: { flag: "anna.met_cafe" }, dialogue: "anna_after" },
+    { when: { all: [{ questDone: "q_metro" }, { questDone: "q_shop" }] }, dialogue: "anna_cafe" },
+    { when: {}, dialogue: "anna_cafe" },
+  ],
+  lidia: [
+    {
+      when: { all: [{ flag: "cat.found" }, { notFlag: "cat.returned" }] },
+      dialogue: "lidia_cat_return",
+    },
+    { when: { flag: "cat.returned" }, dialogue: "lidia_cat_done" },
+    {
+      when: { all: [{ flag: "cat.quest" }, { notFlag: "cat.found" }] },
+      dialogue: "lidia_cat_wait",
+    },
+    { when: { flag: "anna.called" }, dialogue: "lidia_after" },
+    { when: {}, dialogue: "lidia_phone" },
+  ],
+  sasha: [
+    {
+      when: { all: [{ item: "ball" }, { notFlag: "sasha.ball_returned" }] },
+      dialogue: "sasha_ball_return",
+    },
+    { when: { flag: "sasha.met" }, dialogue: "sasha_after" },
+    { when: {}, dialogue: "sasha_meet" },
+  ],
+  artyom: [
+    { when: { flag: "artyom.route" }, dialogue: "artyom_after" },
+    { when: {}, dialogue: "artyom_meet" },
+  ],
+  nina: [
+    { when: { flag: "nina.met" }, dialogue: "nina_after" },
+    { when: {}, dialogue: "nina_meet" },
+  ],
+  andrey: [
+    { when: { flag: "andrey.route_known" }, dialogue: "andrey_after" },
+    { when: {}, dialogue: "andrey_meet" },
+  ],
+  kostya: [
+    {
+      when: { all: [{ flag: "job.morning" }, { notFlag: "job.trial_done" }] },
+      dialogue: "kostya_trial",
+    },
+    { when: { flag: "anna.met_cafe" }, dialogue: "kostya_after" },
+    {
+      when: { all: [{ questDone: "q_metro" }, { questDone: "q_shop" }] },
+      dialogue: "kostya_ready",
+    },
+    { when: { flag: "kostya.met" }, dialogue: "kostya_after" },
+    { when: {}, dialogue: "kostya_meet" },
+  ],
+  valentina: [
+    { when: { flag: "valentina.met" }, dialogue: "valentina_after" },
+    { when: {}, dialogue: "valentina_meet" },
+  ],
+  musya: [
+    { when: { flag: "cat.found" }, dialogue: "musya_again" },
+    { when: {}, dialogue: "musya_meet" },
+  ],
+  player: [],
+  narrator: [],
+  phone: [],
+};
+
+export function npcName(id: NpcId): string {
+  const npc = NPC_BY_ID[id];
+  return npc ? npc.shortNameRu : "";
+}
