@@ -1,0 +1,37 @@
+/* MIR 3D RPG Design Tokens — AAA Cinematic Indie */
+:root {
+  /* Surfaces */
+  --mir-ink: #0f0e0c;
+  --mir-ink-2: #171410;
+  --mir-ink-3: #1f1b16;
+  --mir-panel: rgba(18, 15, 12, 0.88);
+  --mir-panel-2: rgba(23, 19, 15, 0.76);
+  --mir-panel-border: rgba(241, 228, 203, 0.10);
+  --mir-panel-border-strong: rgba(241, 228, 203, 0.16);
+  /* Accents */
+  --mir-amber: #d9a441;
+  --mir-amber-soft: #e6be77;
+  --mir-amber-dim: rgba(217, 164, 65, 0.14);
+  --mir-ivory: #f1e4cb;
+  --mir-ivory-dim: #cfc1a8;
+  --mir-ivory-faint: #9b8e79;
+  --mir-moss: #6b8060;
+  --mir-brick: #8a4a3a;
+  /* Text */
+  --mir-serif: "Cormorant Garamond", Georgia, serif;
+  --mir-sans: "Inter", system-ui, -apple-system, sans-serif;
+  /* Shadows */
+  --mir-shadow-lg: 0 24px 70px rgba(0,0,0,0.62), 0 8px 32px rgba(0,0,0,0.48);
+  --mir-shadow-md: 0 12px 32px rgba(0,0,0,0.44);
+  /* Radii */
+  --mir-r: 14px;
+  --mir-r-lg: 20px;
+  --mir-r-pill: 999px;
+  /* Blur */
+  --mir-blur: 18px;
+}
+.mir-figma {
+  font-family: var(--mir-sans);
+  background: #0b0a09;
+  color: var(--mir-ivory);
+}
