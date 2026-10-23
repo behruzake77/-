@@ -1,6 +1,7 @@
 import { Component, useEffect, type ReactNode } from "react";
 import { useGame } from "./state/store";
 import { GameCanvas } from "./ui/GameCanvas";
+import { ThreeCanvas } from "./three/ThreeCanvas";
 import { Intro } from "./ui/Intro";
 import { TopBar, QuestChip, InteractPrompt, InventoryStrip, ConfirmDialog } from "./ui/Hud";
 import { Dialogue } from "./ui/Dialogue";
@@ -113,10 +114,16 @@ export function App() {
     };
   }, []);
 
+  const search = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const force2d = search?.has("2d");
+  const force3d = search?.has("3d");
+  // 3D is now the default — 2D stays as ?2d fallback for compare / low-end.
+  const use3d = force3d ? true : force2d ? false : true;
+
   return (
     <ErrorBoundary>
       <div className="app">
-        <GameCanvas />
+        {use3d ? <ThreeCanvas /> : <GameCanvas />}
         <div className="vignette" aria-hidden="true" />
         <div className="grain" aria-hidden="true" />
 
