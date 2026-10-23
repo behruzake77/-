@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import type { ZoneId } from "@mir/shared";
 import { ZONES } from "@mir/shared";
+import { loadGLB } from "./loaders";
 
 /** 1 unit = 1 meter. Courtyard 1440px /36 ≈40m. */
 const SCALE = 36;
@@ -613,6 +614,11 @@ export function buildCourtyard(texLoader: THREE.TextureLoader): ZoneWorld {
     const shovel=new THREE.Mesh(new THREE.BoxGeometry(0.04,0.42,0.02), new THREE.MeshStandardMaterial({ color:0x3a8a3a }));
     shovel.position.set(x+0.62,0.38,z+0.42); shovel.rotation.z= -0.35; group.add(shovel);
     colliders.push({ min:new THREE.Vector3(x-outerW/2,0,z-outerD/2), max:new THREE.Vector3(x+outerW/2, h, z+outerD/2) });
+    // === Blender GLB pipeline — демо: Blender дан экспорт қилинган моделни улаб кўриш ===
+    // Ўз Blender моделингни /public/models/bench.glb деб сақласанг, шу ерда автоматик алмашади.
+    // Ҳозир демо учун avocado.glb кўрсатамиз (ўчириш мумкин).
+    const demoHolder = new THREE.Group(); demoHolder.position.set(x - 1.35, 0.34, z - 0.72); group.add(demoHolder);
+    loadGLB(demoHolder, "/models/demo-avocado.glb", null, { scale: 1.8 });
   }
 
   // birch — realistic trunk with bark texture (canvas), branches, leaf clusters as planes
