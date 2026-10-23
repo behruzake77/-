@@ -143,6 +143,7 @@ function buildHuman(def: NpcDefinition): THREE.Group {
     return armG;
   }
   const armL=arm(-1), armR=arm(1);
+  armL.name="armL"; armR.name="armR";
   // natural pose slight bend
   armL.rotation.z=0.12; armL.rotation.x=0.08; armR.rotation.z=-0.12; armR.rotation.x=0.08;
   fig.add(armL); fig.add(armR);
@@ -159,7 +160,7 @@ function buildHuman(def: NpcDefinition): THREE.Group {
     const sole=new THREE.Mesh(new THREE.BoxGeometry(0.145*scale,0.022*scale,0.27*scale), new THREE.MeshStandardMaterial({ color:0x3a352f })); sole.position.set(0,-0.89*scale,0.04*scale); legG.add(sole);
     return legG;
   }
-  const legL=leg(-1), legR=leg(1); fig.add(legL); fig.add(legR);
+  const legL=leg(-1), legR=leg(1); legL.name="legL"; legR.name="legR"; fig.add(legL); fig.add(legR);
 
   // accessories — scarf / glasses / bag / apron etc with realistic geo
   if(def.look.accessory==="scarf"){
@@ -209,8 +210,10 @@ export function createNpc3D(def: NpcDefinition, at: THREE.Vector3, facing?: stri
 
 export function updateNpcs(npcs: Npc3D[], dt:number, time:number, colliders:any[], playerPos:THREE.Vector3): void{
   for(const npc of npcs){
-    // breathing + idle sway
-    const fig=npc.group.children[0] as THREE.Group; if(fig) fig.position.y=Math.sin(time*0.85 + npc.pos.x)*0.012;
+    const fig=npc.group.children[0] as THREE.Group;
+    // keep group y at ground (0) — fig bob only
+    if(fig) fig.position.y=Math.sin(time*0.85 + npc.pos.x)*0.015;
+    let isMoving=false;
     if(npc.wander && npc.wander.length>0){
       if(!npc.target || time>npc.nextThink){
         npc.target=npc.wander[Math.floor(Math.random()*npc.wander.length)].clone(); npc.nextThink=time+5+Math.random()*6;
@@ -219,18 +222,45 @@ export function updateNpcs(npcs: Npc3D[], dt:number, time:number, colliders:any[
         const to=npc.target.clone().sub(npc.group.position); to.y=0; const d=to.length();
         if(d>0.18){
           to.normalize().multiplyScalar(0.68*dt);
-          const nxt=npc.group.position.clone().add(to); npc.group.position.copy(nxt); npc.pos.copy(nxt);
+          const nxt=npc.group.position.clone().add(to);
+          // keep y at 0
+          nxt.y=0;
+          npc.group.position.copy(nxt); npc.pos.copy(nxt);
           npc.yaw=Math.atan2(to.x,to.z); npc.group.rotation.y=THREE.MathUtils.lerp(npc.group.rotation.y, npc.yaw, 0.14);
-          if(fig) fig.rotation.z=Math.sin(time*4.2)*0.04;
+          isMoving=true;
         } else npc.target=null;
       }
     } else {
       npc.group.rotation.y=npc.yaw + Math.sin(time*0.38 + npc.pos.z)*0.05;
+    }
+    // leg / arm walk cycle
+    if(fig){
+      const legL=fig.getObjectByName("legL") as THREE.Group | null;
+      const legR=fig.getObjectByName("legR") as THREE.Group | null;
+      const armL=fig.getObjectByName("armL") as THREE.Group | null;
+      const armR=fig.getObjectByName("armR") as THREE.Group | null;
+      if(isMoving){
+        const s=Math.sin(time*6.2);
+        const c=Math.cos(time*6.2);
+        if(legL) legL.rotation.x=s*0.52;
+        if(legR) legR.rotation.x=-s*0.52;
+        if(armL) armL.rotation.x=-s*0.42;
+        if(armR) armR.rotation.x=c*0.42;
+        // slight bounce
+        fig.position.y+=Math.abs(Math.sin(time*6.2))*0.035;
+      } else {
+        if(legL) legL.rotation.x=THREE.MathUtils.lerp(legL.rotation.x,0,0.12);
+        if(legR) legR.rotation.x=THREE.MathUtils.lerp(legR.rotation.x,0,0.12);
+        if(armL) armL.rotation.x=THREE.MathUtils.lerp(armL.rotation.x,0.08,0.12);
+        if(armR) armR.rotation.x=THREE.MathUtils.lerp(armR.rotation.x,0.08,0.12);
+      }
     }
     const dist=npc.group.position.distanceTo(playerPos);
     if(dist<2.7){
       const toP=new THREE.Vector3().subVectors(playerPos, npc.group.position); toP.y=0;
       if(toP.lengthSq()>1e-6){ const ty=Math.atan2(toP.x,toP.z); npc.group.rotation.y=THREE.MathUtils.lerp(npc.group.rotation.y, ty, 0.075); }
     }
+    // ensure y stays at ground
+    npc.group.position.y=0;
   }
 }

@@ -68,7 +68,7 @@ export function createPlayer(): Player {
     // glove? bare hand
     return g;
   }
-  const aL = arm(-1), aR = arm(1); aL.rotation.z = 0.10; aR.rotation.z = -0.10; mesh.add(aL); mesh.add(aR);
+  const aL = arm(-1), aR = arm(1); aL.name="armL"; aR.name="armR"; aL.rotation.z = 0.10; aR.rotation.z = -0.10; mesh.add(aL); mesh.add(aR);
   // legs
   function leg(side: number) {
     const g = new THREE.Group(); g.position.set(side * 0.13, 0.72, 0);
@@ -78,7 +78,7 @@ export function createPlayer(): Player {
     const sole = new THREE.Mesh(new THREE.BoxGeometry(0.145, 0.022, 0.27), new THREE.MeshStandardMaterial({ color: 0x3a352f })); sole.position.set(0, -0.89, 0.04); g.add(sole);
     return g;
   }
-  mesh.add(leg(-1)); mesh.add(leg(1));
+  const legL = leg(-1), legR = leg(1); legL.name="legL"; legR.name="legR"; mesh.add(legL); mesh.add(legR);
   // bag — messenger
   const bag = new THREE.Group(); bag.position.set(0.30, 0.98, -0.12); bag.rotation.y = -0.18;
   const bagBody = new THREE.Mesh(new THREE.BoxGeometry(0.30, 0.34, 0.11), new THREE.MeshStandardMaterial({ color: 0x3d2a16, roughness: 0.68 })); bagBody.castShadow = true; bag.add(bagBody);

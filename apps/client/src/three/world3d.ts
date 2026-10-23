@@ -302,9 +302,7 @@ function buildWindow(group: THREE.Group, mats: ReturnType<typeof makeMaterials>,
     new THREE.Vector3(pos.x-0.33, pos.y-0.32, pos.z+0.07),
     new THREE.Vector3(pos.x+0.33, pos.y-0.32, pos.z+0.07),
   ];
-  panes.forEach(p=>{ const m=new THREE.Mesh(paneGeo, gMat); m.position.copy(p); group.add(m); 
-    if(isLit){ const pt=new THREE.PointLight(0xfff0b8, 2.2, 6, 1.5); pt.position.set(p.x,p.y,p.z+0.45); group.add(pt); }
-  });
+  panes.forEach(p=>{ const m=new THREE.Mesh(paneGeo, gMat); m.position.copy(p); group.add(m); });
   // sill outside
   const sill = new THREE.Mesh(new THREE.BoxGeometry(winW+0.22, 0.08, 0.18), sillMat);
   sill.position.set(pos.x, pos.y-winH/2-0.08, pos.z+0.10); sill.receiveShadow=true; group.add(sill);
@@ -519,7 +517,7 @@ export function buildCourtyard(texLoader: THREE.TextureLoader): ZoneWorld {
   key.position.set(0, archRadius-0.12, 0.04); lintel.add(key);
   group.add(lintel);
   // arch interior light
-  const archLight = new THREE.PointLight(0xffe8b0, 4, 10, 1.6); archLight.position.set(0, 2.1, southZ-0.6); group.add(archLight);
+  const archLight = new THREE.PointLight(0xffe8b0, 2.5, 8, 1.4); archLight.position.set(0, 2.1, southZ-0.6); group.add(archLight);
 
   // ---------- props: replace spheres with realistic clusters ----------
   // bushes — cluster of spheres + twigs
@@ -849,7 +847,7 @@ export function buildCourtyard(texLoader: THREE.TextureLoader): ZoneWorld {
   }
 
   // triggers / spawns
-  const toVec=(pxX:number,pxZ:number):THREE.Vector3=> new THREE.Vector3(-HW+px(pxX),0.95,-HH+px(pxZ));
+  const toVec=(pxX:number,pxZ:number):THREE.Vector3=> new THREE.Vector3(-HW+px(pxX),0,-HH+px(pxZ));
   triggers.push({ id:"courtyard.entrance1", pos: toVec(380,262), radius:2.45, to:"apartment", via:"from_courtyard" });
   triggers.push({ id:"courtyard.entrance2", pos: toVec(1100,262), radius:2.1 });
   triggers.push({ id:"courtyard.mailboxes", pos: toVec(474,268), radius:1.45 });
@@ -859,15 +857,15 @@ export function buildCourtyard(texLoader: THREE.TextureLoader): ZoneWorld {
   triggers.push({ id:"courtyard.playground", pos: toVec(560,742), radius:1.9 });
   triggers.push({ id:"courtyard.puddle", pos: toVec(470,844), radius:1.6 });
   triggers.push({ id:"courtyard.laundry", pos: toVec(470,356), radius:1.55 });
-  triggers.push({ id:"courtyard.arch", pos: new THREE.Vector3(0,0.9,HH-0.6), radius:2.4, to:"street" });
+  triggers.push({ id:"courtyard.arch", pos: new THREE.Vector3(0,0,HH-0.6), radius:2.4, to:"street" });
 
-  spawns["player"]=new THREE.Vector3(0,0.9,HH-6.2);
+  spawns["player"]=new THREE.Vector3(0,0,HH-6.2);
   spawns["lidia"]=toVec(884,612); spawns["sasha"]=toVec(620,715); spawns["artyom"]=toVec(970,858); spawns["musya"]=toVec(238,548);
 
   // lighting — Blender Cycles-like: soft dusk, warm sun, contact shadows
   const hemi=new THREE.HemisphereLight(0xe6e4ef, 0x1a1510, 0.62); hemi.position.set(0,20,0); group.add(hemi);
   const sun=new THREE.DirectionalLight(0xfff1e2, 1.35); sun.position.set(-14,18,-9);
-  sun.castShadow=true; sun.shadow.mapSize.set(2048,2048);
+  sun.castShadow=true; sun.shadow.mapSize.set(1024,1024);
   sun.shadow.camera.near=0.5; sun.shadow.camera.far=55;
   sun.shadow.camera.left=-22; sun.shadow.camera.right=22; sun.shadow.camera.top=16; sun.shadow.camera.bottom=-16;
   sun.shadow.radius=3.5; sun.shadow.bias=-0.0006; group.add(sun);
@@ -957,14 +955,14 @@ export function buildApartment(texLoader: THREE.TextureLoader): ZoneWorld {
   boxCollider(new THREE.Vector3(-4.42,0.91,-2.75), new THREE.Vector3(1.18,1.82,0.58), colliders);
   boxCollider(new THREE.Vector3(3.45,0.32,2.05), new THREE.Vector3(2.05,0.64,3.25), colliders);
 
-  triggers.push({ id:"apartment.exit", pos:new THREE.Vector3(0,0.9,-D/2+1.1), radius:1.25, to:"courtyard" });
-  triggers.push({ id:"apartment.bed", pos:new THREE.Vector3(3.45,0.9,2.05), radius:1.45 });
-  triggers.push({ id:"apartment.kettle", pos:new THREE.Vector3(-3.65,0.9,1.55), radius:1.15 });
-  triggers.push({ id:"apartment.mirror", pos:new THREE.Vector3(-4.42,1.0,-1.95), radius:1.0 });
+  triggers.push({ id:"apartment.exit", pos:new THREE.Vector3(0,0,-D/2+1.1), radius:1.25, to:"courtyard" });
+  triggers.push({ id:"apartment.bed", pos:new THREE.Vector3(3.45,0,2.05), radius:1.45 });
+  triggers.push({ id:"apartment.kettle", pos:new THREE.Vector3(-3.65,0,1.55), radius:1.15 });
+  triggers.push({ id:"apartment.mirror", pos:new THREE.Vector3(-4.42,0,-1.95), radius:1.0 });
 
   const hemi=new THREE.HemisphereLight(0xfffaf1,0x3a3028,0.82); group.add(hemi);
   const dir=new THREE.DirectionalLight(0xfff6e0,0.82); dir.position.set(2.2,4.2,1.2); dir.castShadow=true; dir.shadow.mapSize.set(1024,1024); group.add(dir);
-  return { group, colliders, triggers, spawns:{ player:new THREE.Vector3(0,0.9,-D/2+2.4) }, groundY:0 };
+  return { group, colliders, triggers, spawns:{ player:new THREE.Vector3(0,0,-D/2+2.4) }, groundY:0 };
 }
 
 /* ---------- street (corridor) — now with shop fronts detailed ---------- */
@@ -1025,19 +1023,19 @@ export function buildStreet(texLoader: THREE.TextureLoader): ZoneWorld {
     colliders.push({ min:new THREE.Vector3(-CW/2,0,zSide-0.45), max:new THREE.Vector3(CW/2,9.2,zSide+0.45) });
   }
   streetFacade(-CH/2 -0.42); streetFacade(CH/2+0.42);
-  triggers.push({ id:"street.courtyard", pos:new THREE.Vector3(0,0.9,CH/2-0.6), radius:2.2, to:"courtyard" });
-  triggers.push({ id:"street.shop", pos:new THREE.Vector3(-9,0.9,-CH/2+1.6), radius:1.55, to:"shop" });
-  triggers.push({ id:"street.cafe", pos:new THREE.Vector3(6,0.9,-CH/2+1.6), radius:1.55, to:"cafe" });
-  triggers.push({ id:"street.metro", pos:new THREE.Vector3(18.5,0.9,0), radius:1.9, to:"metro" });
-  triggers.push({ id:"street.dombyta", pos:new THREE.Vector3(-14,0.9,CH/2-1.0), radius:1.55, to:"dombyta" });
+  triggers.push({ id:"street.courtyard", pos:new THREE.Vector3(0,0,CH/2-0.6), radius:2.2, to:"courtyard" });
+  triggers.push({ id:"street.shop", pos:new THREE.Vector3(-9,0,-CH/2+1.6), radius:1.55, to:"shop" });
+  triggers.push({ id:"street.cafe", pos:new THREE.Vector3(6,0,-CH/2+1.6), radius:1.55, to:"cafe" });
+  triggers.push({ id:"street.metro", pos:new THREE.Vector3(18.5,0,0), radius:1.9, to:"metro" });
+  triggers.push({ id:"street.dombyta", pos:new THREE.Vector3(-14,0,CH/2-1.0), radius:1.55, to:"dombyta" });
   // kiosk + benches
   addBox(group,colliders,new THREE.BoxGeometry(1.8,1.92,1.02), new THREE.MeshStandardMaterial({ color:0xc9b896 }), new THREE.Vector3(11,0.96,-1.05));
   const kRoof=new THREE.Mesh(new THREE.BoxGeometry(2.05,0.14,1.28), new THREE.MeshStandardMaterial({ color:0x8a2a2a })); kRoof.position.set(11,1.99,-1.05); group.add(kRoof);
   addBox(group,colliders,new THREE.BoxGeometry(2.2,0.46,0.62), mats.benchWood, new THREE.Vector3(-2,0.23,2.45));
   const hemi=new THREE.HemisphereLight(0xe6e4ef,0x181410,0.72); group.add(hemi);
-  const sun=new THREE.DirectionalLight(0xfff1e2,1.2); sun.position.set(-12,14,-7); sun.castShadow=true; sun.shadow.mapSize.set(2048,2048); group.add(sun);
+  const sun=new THREE.DirectionalLight(0xfff1e2,1.2); sun.position.set(-12,14,-7); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024); group.add(sun);
   [-18,-6,6,18].forEach(x=>{ const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.07,3.45,8), mats.metal); pole.position.set(x,1.72,-2.2); group.add(pole); const head=new THREE.Mesh(new THREE.SphereGeometry(0.16,8,6), new THREE.MeshStandardMaterial({ color:0xfff6d6, emissive:0x332e12, emissiveIntensity:0.28 })); head.position.set(x,3.5,-2.2); group.add(head); });
-  return { group, colliders, triggers, spawns:{ player:new THREE.Vector3(0,0.9,CH/2-3.2) }, groundY:0 };
+  return { group, colliders, triggers, spawns:{ player:new THREE.Vector3(0,0,CH/2-3.2) }, groundY:0 };
 }
 
 /* ---------- shop interior — now realistic store ---------- */
@@ -1103,10 +1101,10 @@ export function buildShop(texLoader: THREE.TextureLoader): ZoneWorld {
     const li=new THREE.PointLight(0xfff2b0, 9,10,1.2); li.position.set(x,2.72,0); group.add(li);
   }
 
-  triggers.push({ id:"shop.exit", pos:new THREE.Vector3(0,0.9,D/2-1.05), radius:1.25, to:"street" });
-  triggers.push({ id:"shop.counter", pos:new THREE.Vector3(0,0.9,-D/2+3.1), radius:1.35 });
+  triggers.push({ id:"shop.exit", pos:new THREE.Vector3(0,0,D/2-1.05), radius:1.25, to:"street" });
+  triggers.push({ id:"shop.counter", pos:new THREE.Vector3(0,0,-D/2+3.1), radius:1.35 });
   const hemi=new THREE.HemisphereLight(0xfffaf1,0x3a3028,0.92); group.add(hemi);
-  return { group, colliders, triggers, spawns:{ player:new THREE.Vector3(0,0.9,D/2-2.2) }, groundY:0 };
+  return { group, colliders, triggers, spawns:{ player:new THREE.Vector3(0,0,D/2-2.2) }, groundY:0 };
 }
 
 export function buildGenericZone(zone: ZoneId, loader: THREE.TextureLoader): ZoneWorld {
@@ -1120,6 +1118,6 @@ export function buildGenericZone(zone: ZoneId, loader: THREE.TextureLoader): Zon
   const found=(ZONES as unknown as {id:string;nameRu:string}[]).find(z=>z.id===zone);
   const name=found?.nameRu ?? zone;
   const spr=textSprite(name.toUpperCase()); spr.position.set(0,2.8,-2.2); base.group.add(spr);
-  const w=(base.triggers[0]={ id:`${zone}.exit`, pos:new THREE.Vector3(0,0.9,4-1.05), radius:1.25, to:"street" as ZoneId }); void w;
+  const w=(base.triggers[0]={ id:`${zone}.exit`, pos:new THREE.Vector3(0,0,4-1.05), radius:1.25, to:"street" as ZoneId }); void w;
   return base;
 }

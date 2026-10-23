@@ -121,7 +121,7 @@ export function ThreeCanvas() {
 
       // spawn player
       if (!keepPos || !lastZone) {
-        const sp = w.spawns["player"] ?? new THREE.Vector3(0, 0.9, 0);
+        const sp = w.spawns["player"] ?? new THREE.Vector3(0, 0, 0);
         setPlayerPos(player, sp, zone === "street" ? Math.PI : 0);
         camYaw = player.yaw;
       } else {
@@ -152,12 +152,12 @@ export function ThreeCanvas() {
           let at: THREE.Vector3;
           if (isCourtyard) {
             const px = (n:number)=> n / 36;
-            at = new THREE.Vector3(-HW + px(plc.x), 0.9, -HH + px(plc.y));
+            at = new THREE.Vector3(-HW + px(plc.x), 0, -HH + px(plc.y));
           } else {
             // interior: map placement px to centered box: approx W=12,D=9 -> use plc.x / ZW * W - W/2
             const W3 = zone === "street" ? 44 : 11;
             const D3 = zone === "street" ? 16 : 8;
-            at = new THREE.Vector3((plc.x / ZW) * W3 - W3/2, 0.9, (plc.y / ZH) * D3 - D3/2);
+            at = new THREE.Vector3((plc.x / ZW) * W3 - W3/2, 0, (plc.y / ZH) * D3 - D3/2);
           }
           const n = createNpc3D(def as any, at, plc.facing);
           // special: give sasha wander in courtyard
@@ -187,7 +187,7 @@ export function ThreeCanvas() {
         } else if (zone === "shop") {
           const nina = (NPC_BY_ID as any)["nina"];
           if (nina) {
-            const p = new THREE.Vector3(0, 0.9, -1.2);
+            const p = new THREE.Vector3(0, 0, -1.2);
             const n = createNpc3D(nina, p, "down");
             npcs.push(n);
             scene.add(n.group);
@@ -195,28 +195,28 @@ export function ThreeCanvas() {
         } else if (zone === "cafe") {
           const kostya = (NPC_BY_ID as any)["kostya"];
           if (kostya) {
-            const p = new THREE.Vector3(-1.8, 0.9, -1.6);
+            const p = new THREE.Vector3(-1.8, 0, -1.6);
             const n = createNpc3D(kostya, p, "down");
             npcs.push(n); scene.add(n.group);
           }
           const anna = (NPC_BY_ID as any)["anna"];
           // anna appears later per conditions — show if quest condition met or always for demo
           if (anna) {
-            const p2 = new THREE.Vector3(1.6,0.9,1.1);
+            const p2 = new THREE.Vector3(1.6,0,1.1);
             const n2 = createNpc3D(anna, p2, "left");
             npcs.push(n2); scene.add(n2.group);
           }
         } else if (zone === "metro") {
           const andrey = (NPC_BY_ID as any)["andrey"];
           if (andrey) {
-            const p = new THREE.Vector3(0,0.9,-0.8);
+            const p = new THREE.Vector3(0,0,-0.8);
             const n = createNpc3D(andrey, p, "down");
             npcs.push(n); scene.add(n.group);
           }
         } else if (zone === "dombyta") {
           const val = (NPC_BY_ID as any)["valentina"];
           if (val) {
-            const p = new THREE.Vector3(0,0.9,-1.0);
+            const p = new THREE.Vector3(0,0,-1.0);
             const n = createNpc3D(val, p, "down");
             npcs.push(n); scene.add(n.group);
           }
@@ -389,6 +389,7 @@ export function ThreeCanvas() {
           // convert world dir to camera-relative input? Actually walkTarget movement is absolute world direction, ignore camera
           tmpMove.copy(dir).multiplyScalar(3.35 * dt);
           movePlayer(player, tmpMove, world?.colliders ?? []);
+          player.group.position.y = 0;
           // face move dir
           const yaw = Math.atan2(dir.x, dir.z);
           player.yaw = THREE.MathUtils.lerp(player.yaw, yaw, 0.18);
@@ -396,8 +397,18 @@ export function ThreeCanvas() {
           // align camera behind player slightly
           camYaw = THREE.MathUtils.lerp(camYaw, yaw, 0.02);
           usingWalkTarget = true;
-          // animate legs
-          (player.mesh.children[0] as THREE.Group)?.traverse(()=>{});
+          // animate legs for auto-walk
+          {
+            const legL = player.mesh.getObjectByName("legL") as any;
+            const legR = player.mesh.getObjectByName("legR") as any;
+            const armL = player.mesh.getObjectByName("armL") as any;
+            const armR = player.mesh.getObjectByName("armR") as any;
+            const s = Math.sin(t * 6.8);
+            if(legL) legL.rotation.x = s*0.52;
+            if(legR) legR.rotation.x = -s*0.52;
+            if(armL) armL.rotation.x = -s*0.38;
+            if(armR) armR.rotation.x = s*0.38;
+          }
           // ring fade
           const age = performance.now() - ringAt;
           (walkRing.material as THREE.MeshBasicMaterial).opacity = Math.max(0, 0.92 - age * 0.00055);
@@ -430,13 +441,37 @@ export function ThreeCanvas() {
             const targetYaw = Math.atan2(tmpMove.x, tmpMove.z);
             player.yaw = THREE.MathUtils.lerp(player.yaw, targetYaw, 0.16);
             player.mesh.rotation.y = player.yaw;
-            // walk anim: bob
-            player.mesh.position.y = Math.abs(Math.sin(t*7))*0.035;
+            // walk anim: legs + arms + bob (Blender walk cycle)
+            const legL = player.mesh.getObjectByName("legL") as THREE.Group | null;
+            const legR = player.mesh.getObjectByName("legR") as THREE.Group | null;
+            const armL = player.mesh.getObjectByName("armL") as THREE.Group | null;
+            const armR = player.mesh.getObjectByName("armR") as THREE.Group | null;
+            const s = Math.sin(t * 7.2);
+            const c = Math.cos(t * 7.2);
+            if (legL) legL.rotation.x = s * 0.58;
+            if (legR) legR.rotation.x = -s * 0.58;
+            if (armL) armL.rotation.x = -s * 0.48;
+            if (armR) armR.rotation.x = s * 0.48;
+            // subtle bob on whole mesh but keep shadow not bobbing too much — bob only y
+            const bob = Math.abs(Math.sin(t * 7.2)) * 0.045;
+            // keep group y at 0, bob mesh slightly
+            player.mesh.position.y = bob;
+            // ensure group stays grounded
+            player.group.position.y = 0;
             // clear walk target
             hasWalkTarget = false;
             (walkRing.material as THREE.MeshBasicMaterial).opacity *= 0.92;
           } else {
-            player.mesh.position.y = THREE.MathUtils.lerp(player.mesh.position.y, 0, 0.2);
+            const legL = player.mesh.getObjectByName("legL") as THREE.Group | null;
+            const legR = player.mesh.getObjectByName("legR") as THREE.Group | null;
+            const armL = player.mesh.getObjectByName("armL") as THREE.Group | null;
+            const armR = player.mesh.getObjectByName("armR") as THREE.Group | null;
+            if (legL) legL.rotation.x = THREE.MathUtils.lerp(legL.rotation.x, 0, 0.14);
+            if (legR) legR.rotation.x = THREE.MathUtils.lerp(legR.rotation.x, 0, 0.14);
+            if (armL) armL.rotation.x = THREE.MathUtils.lerp(armL.rotation.x, 0.08, 0.14);
+            if (armR) armR.rotation.x = THREE.MathUtils.lerp(armR.rotation.x, 0.08, 0.14);
+            player.mesh.position.y = THREE.MathUtils.lerp(player.mesh.position.y, 0, 0.18);
+            player.group.position.y = 0;
           }
         } else {
           player.mesh.position.y = THREE.MathUtils.lerp(player.mesh.position.y, 0, 0.16);
